@@ -43,7 +43,15 @@ A TypeScript-based backend for the XPro Trading application, featuring comprehen
    docker-compose up -d mongo redis
    ```
 
-4. Run the development server:
+4. Create admin user:
+
+   ```bash
+   npm run create-admin
+   ```
+
+   This creates an admin user with email `admin@xprotrading.com` and password `Admin123!`. **Change the password after first login!**
+
+5. Run the development server:
    ```bash
    npm run dev
    ```
@@ -82,6 +90,30 @@ A TypeScript-based backend for the XPro Trading application, featuring comprehen
 
 - `GET /api/portfolio/overview` - Get portfolio overview with balance, P&L, and performance chart
 - `GET /api/portfolio/history?startDate=&endDate=&format=csv` - Get portfolio history with optional CSV export
+
+### Admin API (All require admin authentication)
+
+#### User Management
+
+- `GET /api/admin/users?page=1&limit=20` - List all users with pagination
+- `GET /api/admin/users/:userId` - View user details and trading activity
+- `POST /api/admin/users/:userId/reset-balance` - Reset user demo balance to $10,000
+- `PATCH /api/admin/users/:userId/status` - Activate/deactivate user account
+
+#### System Control
+
+- `GET /api/admin/assets` - List all tradable assets
+- `POST /api/admin/assets` - Add new tradable asset
+- `DELETE /api/admin/assets/:symbol` - Remove tradable asset
+- `POST /api/admin/prices/adjust` - Adjust simulated prices for stress testing
+- `GET /api/admin/metrics` - View system metrics and health
+- `POST /api/admin/notifications/global` - Send global notifications to all users
+
+#### Reports
+
+- `GET /api/admin/reports/usage?startDate=&endDate=` - Platform usage statistics
+- `GET /api/admin/reports/trading-patterns` - User trading pattern analysis
+- `GET /api/admin/reports/revenue` - Revenue simulation reports
 
 ### WebSocket Events
 
@@ -158,6 +190,32 @@ python main.py
 cd python-engine
 python test_trading.py
 ```
+
+## Admin API
+
+The admin API provides comprehensive administrative controls with role-based access. All admin endpoints require authentication with admin role.
+
+### User Management
+
+- `GET /api/admin/users?page=1&limit=20` - List all users with pagination
+- `GET /api/admin/users/:userId` - View user details and trading activity
+- `POST /api/admin/users/:userId/reset-balance` - Reset user demo balance to $10,000
+- `PATCH /api/admin/users/:userId/status` - Activate/deactivate user account
+
+### System Control
+
+- `GET /api/admin/assets` - List all tradable assets
+- `POST /api/admin/assets` - Add new tradable asset
+- `DELETE /api/admin/assets/:symbol` - Remove tradable asset
+- `POST /api/admin/prices/adjust` - Adjust simulated prices for stress testing
+- `GET /api/admin/metrics` - View system metrics and health
+- `POST /api/admin/notifications/global` - Send global notifications to all users
+
+### Reports
+
+- `GET /api/admin/reports/usage?startDate=&endDate=` - Platform usage statistics
+- `GET /api/admin/reports/trading-patterns` - User trading pattern analysis
+- `GET /api/admin/reports/revenue` - Revenue simulation reports
 
 ## Scripts
 

@@ -14,6 +14,10 @@ export interface IUser extends Model {
   resetPasswordExpires?: Date;
   googleId?: string;
   avatar?: string;
+  role: "user" | "admin" | "moderator";
+  isActive: boolean;
+  demoBalance: number;
+  lastLoginAt?: Date;
   createdAt: Date;
   updatedAt: Date;
   checkPassword(password: string): Promise<boolean>;
@@ -70,6 +74,22 @@ const User = sequelize.define<IUser>(
     },
     avatar: {
       type: DataTypes.STRING,
+      allowNull: true,
+    },
+    role: {
+      type: DataTypes.ENUM("user", "admin", "moderator"),
+      defaultValue: "user",
+    },
+    isActive: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
+    demoBalance: {
+      type: DataTypes.DECIMAL(15, 2),
+      defaultValue: 10000.0,
+    },
+    lastLoginAt: {
+      type: DataTypes.DATE,
       allowNull: true,
     },
   },

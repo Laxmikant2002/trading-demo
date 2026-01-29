@@ -46,6 +46,7 @@ export class AuthService {
     const payload: TokenPayload = {
       userId: user.id,
       email: user.email,
+      role: user.role,
     };
 
     const { accessToken, refreshToken } = generateTokenPair(payload);
@@ -74,6 +75,7 @@ export class AuthService {
     const payload: TokenPayload = {
       userId: user.id,
       email: user.email,
+      role: user.role,
     };
 
     const newAccessToken = generateTokenPair(payload).accessToken;

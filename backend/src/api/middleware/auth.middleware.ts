@@ -21,7 +21,12 @@ passport.use(
     try {
       const user = await User.findByPk(payload.userId);
       if (user) {
-        return done(null, payload);
+        // Update payload with current user role
+        const updatedPayload = {
+          ...payload,
+          role: user.role,
+        };
+        return done(null, updatedPayload);
       }
       return done(null, false);
     } catch (error) {

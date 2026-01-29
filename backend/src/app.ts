@@ -83,9 +83,11 @@ app.use(generalRateLimit);
 import authRoutes from "./api/routes/auth.routes";
 import marketDataRoutes from "./api/routes/marketData.routes";
 import tradingRoutes from "./api/routes/trading.routes";
+import adminRoutes from "./api/routes/admin.routes";
 app.use("/api/auth", authRoutes);
 app.use("/api/market-data", marketDataRoutes);
 app.use("/api/trade", tradingRoutes);
+app.use("/api/admin", adminRoutes);
 
 // Socket.io setup
 io.on("connection", (socket) => {

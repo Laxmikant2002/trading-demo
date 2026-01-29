@@ -8,6 +8,7 @@ const JWT_REFRESH_SECRET =
 export interface TokenPayload {
   userId: number;
   email: string;
+  role: "user" | "admin" | "moderator";
 }
 
 export const generateAccessToken = (payload: TokenPayload): string => {
