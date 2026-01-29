@@ -8,7 +8,9 @@
     "start": "node dist/app.js",
     "dev": "ts-node src/app.ts",
     "test": "jest",
-    "test-market-data": "ts-node scripts/test-market-data.ts"
+    "test-market-data": "ts-node scripts/test-market-data.ts",
+    "python-engine": "cd python-engine && python main.py",
+    "test-python": "cd python-engine && python test_trading.py"
   },
   "dependencies": {
     "axios": "^1.13.4",

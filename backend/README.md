@@ -93,6 +93,57 @@ Market data response format:
 - `GET /api/trading/orders` - Get user orders
 - `GET /api/market/data/:symbol` - Get market data
 
+## Python Trading Engine
+
+The Python engine provides advanced trading logic, order execution, and risk management using FastAPI.
+
+### Features
+
+- **Order Execution**: Market orders, limit orders, stop-loss, and take-profit
+- **P&L Calculations**: Real-time unrealized and realized P&L tracking
+- **Margin & Leverage**: Dynamic margin calculations with leverage support
+- **Risk Management**: Margin calls, drawdown limits, and risk metrics
+- **Portfolio Analytics**: Sharpe ratio, win rate, profit factor calculations
+
+### Setup
+
+```bash
+cd python-engine
+pip install -r ../requirements.txt
+python main.py
+```
+
+### API Endpoints
+
+#### Orders
+
+- `POST /orders` - Place new order
+- `GET /orders` - Get all orders
+
+#### Portfolio
+
+- `GET /portfolio` - Get portfolio summary
+- `PUT /portfolio` - Update portfolio settings
+- `GET /positions` - Get open positions
+- `GET /trades` - Get trade history
+
+#### Market Data
+
+- `POST /market-price/{symbol}` - Update market price
+
+#### Analytics
+
+- `GET /risk-metrics` - Get risk metrics
+- `GET /performance` - Get detailed performance
+- `POST /reset` - Reset portfolio
+
+### Testing
+
+```bash
+cd python-engine
+python test_trading.py
+```
+
 ## Scripts
 
 - `npm run build` - Build TypeScript
