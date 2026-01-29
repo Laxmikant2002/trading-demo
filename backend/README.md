@@ -51,6 +51,7 @@ A TypeScript-based backend for the XPro Trading application, featuring comprehen
 ## API Endpoints
 
 ### Authentication
+
 - `POST /api/auth/register` - Register a new user
 - `POST /api/auth/login` - Login user
 - `POST /api/auth/logout` - Logout user
@@ -61,20 +62,23 @@ A TypeScript-based backend for the XPro Trading application, featuring comprehen
 - `GET /api/auth/profile` - Get user profile (authenticated)
 
 ### Market Data
+
 - `GET /api/market-data` - Get all symbols market data
 - `GET /api/market-data/:symbol` - Get specific symbol market data
 - `GET /api/market-data/:symbol/history` - Get historical data
 - `POST /api/market-data/update` - Trigger manual update (admin only)
 
 ### WebSocket Events
+
 - `subscribe-market-data` - Subscribe to real-time market data updates
 - `market-data-update` - Receive market data updates (every 15 minutes)
 
 Market data response format:
+
 ```json
 {
   "symbol": "BTC",
-  "price": 65000.50,
+  "price": 65000.5,
   "change_24h": 2.5,
   "high_24h": 65500,
   "low_24h": 64500,
@@ -85,6 +89,7 @@ Market data response format:
   "rsi_14": 65.5
 }
 ```
+
 - `GET /api/trading/orders` - Get user orders
 - `GET /api/market/data/:symbol` - Get market data
 
