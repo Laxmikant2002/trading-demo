@@ -38,7 +38,9 @@ export class WebSocketService {
       // Set up Redis adapter for scaling
       // this.io.adapter(redisAdapter({ pubClient, subClient }));
 
-      console.log("Redis clients initialized (adapter commented out for compatibility)");
+      console.log(
+        "Redis clients initialized (adapter commented out for compatibility)",
+      );
     } catch (error) {
       console.warn(
         "Redis adapter not available, running in single-instance mode:",

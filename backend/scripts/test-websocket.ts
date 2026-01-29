@@ -15,7 +15,7 @@ async function testWebSocketServer() {
     // Authenticate
     socket1.emit("authenticate", {
       userId: 1,
-      email: "test@example.com"
+      email: "test@example.com",
     });
 
     // Subscribe to market data
@@ -64,14 +64,14 @@ async function testWebSocketServer() {
       console.log(`✅ Socket ${i + 2} connected:`, socket.id);
       socket.emit("authenticate", {
         userId: i + 2,
-        email: `user${i + 2}@example.com`
+        email: `user${i + 2}@example.com`,
       });
     });
   }
 
   // Monitor connection count
   setInterval(() => {
-    const connectedCount = sockets.filter(s => s.connected).length;
+    const connectedCount = sockets.filter((s) => s.connected).length;
     console.log(`📊 Connected sockets: ${connectedCount}/${connections}`);
   }, 5000);
 
@@ -82,7 +82,7 @@ async function testWebSocketServer() {
       socket1.emit("send-chat-message", {
         roomId: "support-room-1",
         message: "Hello, I need help with trading!",
-        type: "text"
+        type: "text",
       });
     }, 2000);
   });
@@ -94,7 +94,7 @@ async function testWebSocketServer() {
   // Keep the test running
   process.on("SIGINT", () => {
     console.log("\n🛑 Shutting down test...");
-    sockets.forEach(socket => socket.disconnect());
+    sockets.forEach((socket) => socket.disconnect());
     process.exit(0);
   });
 }
