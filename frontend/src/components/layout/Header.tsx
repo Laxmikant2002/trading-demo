@@ -27,6 +27,12 @@ const Header: React.FC = () => {
               Trading
             </Link>
             <Link
+              to="/market"
+              className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium"
+            >
+              Market
+            </Link>
+            <Link
               to="/portfolio"
               className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium"
             >

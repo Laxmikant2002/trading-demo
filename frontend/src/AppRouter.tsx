@@ -14,6 +14,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Trading from "./pages/Trading";
 import Portfolio from "./pages/Portfolio";
+import Market from "./pages/Market";
 import History from "./pages/History";
 import Notifications from "./pages/Notifications";
 import Settings from "./pages/Settings";
@@ -111,6 +112,16 @@ const AppRouter: React.FC = () => {
                 <ProtectedRoute>
                   <Layout>
                     <Portfolio />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/market"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Market />
                   </Layout>
                 </ProtectedRoute>
               }
