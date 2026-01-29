@@ -12,9 +12,15 @@
     "test-websocket": "ts-node scripts/test-websocket.ts",
     "python-engine": "cd python-engine && python main.py",
     "test-python": "cd python-engine && python test_trading.py",
-    "create-admin": "ts-node scripts/create-admin.ts"
+    "create-admin": "ts-node scripts/create-admin.ts",
+    "db:migrate": "prisma migrate dev",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:seed": "ts-node prisma/seed.ts",
+    "db:studio": "prisma studio"
   },
   "dependencies": {
+    "@prisma/client": "^7.3.0",
     "axios": "^1.13.4",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
@@ -30,6 +36,7 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.1",
     "pg": "^8.11.3",
+    "prisma": "^7.3.0",
     "rate-limit-redis": "^4.0.0",
     "redis": "^4.6.8",
     "resend": "^3.2.0",
