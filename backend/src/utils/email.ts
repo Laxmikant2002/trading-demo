@@ -1,6 +1,9 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend =
+  process.env.NODE_ENV === "test"
+    ? null
+    : new Resend(process.env.RESEND_API_KEY);
 
 export interface EmailOptions {
   to: string;
@@ -10,6 +13,14 @@ export interface EmailOptions {
 }
 
 export const sendEmail = async (options: EmailOptions): Promise<boolean> => {
+  // In test environment, skip actual email sending
+  if (process.env.NODE_ENV === "test" || !resend) {
+    console.log(
+      `[TEST] Would send email to ${options.to} with subject: ${options.subject}`,
+    );
+    return true;
+  }
+
   try {
     const { data, error } = await resend.emails.send({
       from: options.from || "noreply@xprotrading.com",

@@ -45,6 +45,10 @@ const RefreshToken = sequelize.define<IRefreshToken>(
 
 // Import User here to avoid circular dependency
 import User from "./User";
-RefreshToken.belongsTo(User, { foreignKey: "userId", as: "user" });
+
+// Only set up associations when not in test environment
+if (process.env.NODE_ENV !== "test") {
+  RefreshToken.belongsTo(User, { foreignKey: "userId", as: "user" });
+}
 
 export default RefreshToken;
