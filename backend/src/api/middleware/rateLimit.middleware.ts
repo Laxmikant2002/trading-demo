@@ -1,34 +1,47 @@
-import { Request, Response, NextFunction } from "express";
+import rateLimit from "express-rate-limit";
+import RedisStore from "rate-limit-redis";
+import { createClient, RedisClientType } from "redis";
 
-const requests = new Map<string, { count: number; resetTime: number }>();
+// Create Redis client for rate limiting
+let redisClient: RedisClientType | null = null;
+try {
+  redisClient = createClient({
+    url: process.env.REDIS_URL || "redis://localhost:6379",
+  });
+  redisClient.connect().catch(() => {
+    console.log("Redis not available for rate limiting, using memory store");
+    redisClient = null;
+  });
+} catch (error) {
+  redisClient = null;
+}
 
-export const rateLimitMiddleware = (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  const ip = req.ip || "127.0.0.1";
-  const now = Date.now();
-  const windowMs = 15 * 60 * 1000; // 15 minutes
-  const maxRequests = 100;
+// General rate limiter (100 requests per 15 minutes)
+export const generalRateLimit = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100,
+  message: { error: "Too many requests, please try again later." },
+  standardHeaders: true,
+  legacyHeaders: false,
+  store: redisClient
+    ? new RedisStore({
+        sendCommand: (...args: string[]) => (redisClient as RedisClientType).sendCommand(args),
+      })
+    : undefined,
+});
 
-  const userRequests = requests.get(ip) || {
-    count: 0,
-    resetTime: now + windowMs,
-  };
-
-  if (now > userRequests.resetTime) {
-    userRequests.count = 1;
-    userRequests.resetTime = now + windowMs;
-  } else {
-    userRequests.count++;
-  }
-
-  requests.set(ip, userRequests);
-
-  if (userRequests.count > maxRequests) {
-    return res.status(429).json({ error: "Too many requests" });
-  }
-
-  next();
-};
+// Auth rate limiter (5 attempts per 15 minutes)
+export const authRateLimit = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5,
+  message: {
+    error: "Too many authentication attempts, please try again later.",
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  store: redisClient
+    ? new RedisStore({
+        sendCommand: (...args: string[]) => (redisClient as RedisClientType).sendCommand(args),
+      })
+    : undefined,
+});
