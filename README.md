@@ -208,6 +208,57 @@ docker-compose up -d postgres
 - Nginx for load balancing
 - Health checks and monitoring
 
+## 📚 API Documentation
+
+The XPro Trading Platform provides comprehensive REST API documentation with OpenAPI 3.0 specification.
+
+### 📖 Documentation Files
+
+- **[OpenAPI 3.0 Specification](openapi.json)** - Complete API specification in JSON format
+- **[API Documentation Guide](API_DOCUMENTATION.md)** - Detailed usage guide and examples
+- **[Interactive API Docs](api-docs.html)** - Swagger UI for browsing and testing the API
+- **[Postman Collection](XPro-Trading-API.postman_collection.json)** - Import into Postman for testing
+
+### 🚀 Quick API Test
+
+1. **View Interactive Documentation**
+
+   ```bash
+   # Open in browser
+   open api-docs.html
+   ```
+
+2. **Import Postman Collection**
+   - Open Postman
+   - Import `XPro-Trading-API.postman_collection.json`
+   - Set `base_url` variable to `http://localhost:3000/api`
+
+3. **Test API Endpoints**
+
+   ```bash
+   # Health check
+   curl http://localhost:3000/api/health
+
+   # Get market data
+   curl http://localhost:3000/api/market-data/AAPL
+   ```
+
+### 🔑 Authentication
+
+All protected endpoints require JWT authentication:
+
+```bash
+# Include in request headers
+Authorization: Bearer <your-jwt-token>
+```
+
+### 📊 Rate Limiting
+
+- **General requests**: 100 per 15 minutes
+- **Authentication**: 5 attempts per 15 minutes
+
+Rate limit headers are included in responses.
+
 ## Environment Variables
 
 Copy `.env.example` to `.env` and configure:

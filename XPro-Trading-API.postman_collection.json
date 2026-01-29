@@ -1,0 +1,655 @@
+{
+  "info": {
+    "name": "XPro Trading Platform API",
+    "description": "Complete API collection for the XPro Trading Platform with authentication, trading, portfolio, market data, and admin endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "xpro-trading-platform"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"securepassword123\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            },
+            "description": "Register a new user account. An email verification link will be sent."
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('access_token', response.accessToken);",
+                  "    pm.collectionVariables.set('refresh_token', response.refreshToken);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"securepassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Authenticate user and get JWT tokens. Tokens are automatically saved to collection variables."
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refresh_token}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/refresh-token",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "refresh-token"]
+            },
+            "description": "Refresh the access token using the refresh token."
+          }
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/profile",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "profile"]
+            },
+            "description": "Get the authenticated user's profile information."
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"oldpassword123\",\n  \"newPassword\": \"newsecurepassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/change-password",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "change-password"]
+            },
+            "description": "Change the authenticated user's password."
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refresh_token}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "logout"]
+            },
+            "description": "Logout and revoke the refresh token."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Trading",
+      "item": [
+        {
+          "name": "Place Market Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"symbol\": \"AAPL\",\n  \"side\": \"buy\",\n  \"quantity\": 10\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/trade/market",
+              "host": ["{{base_url}}"],
+              "path": ["trade", "market"]
+            },
+            "description": "Place a market order to buy or sell at the current market price."
+          }
+        },
+        {
+          "name": "Place Limit Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"symbol\": \"AAPL\",\n  \"side\": \"buy\",\n  \"quantity\": 10,\n  \"limitPrice\": 150.00\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/trade/limit",
+              "host": ["{{base_url}}"],
+              "path": ["trade", "limit"]
+            },
+            "description": "Place a limit order at a specific price or better."
+          }
+        },
+        {
+          "name": "Set Stop Loss",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderId\": \"order_123\",\n  \"stopPrice\": 140.00\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/trade/stop-loss",
+              "host": ["{{base_url}}"],
+              "path": ["trade", "stop-loss"]
+            },
+            "description": "Set a stop loss order for an existing position."
+          }
+        },
+        {
+          "name": "Set Take Profit",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderId\": \"order_123\",\n  \"takeProfitPrice\": 160.00\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/trade/take-profit",
+              "host": ["{{base_url}}"],
+              "path": ["trade", "take-profit"]
+            },
+            "description": "Set a take profit order for an existing position."
+          }
+        },
+        {
+          "name": "Get Orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/trade/orders?limit=50&status=pending",
+              "host": ["{{base_url}}"],
+              "path": ["trade", "orders"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "50"
+                },
+                {
+                  "key": "status",
+                  "value": "pending"
+                }
+              ]
+            },
+            "description": "Get all orders for the authenticated user."
+          }
+        },
+        {
+          "name": "Get Positions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/trade/positions",
+              "host": ["{{base_url}}"],
+              "path": ["trade", "positions"]
+            },
+            "description": "Get all current positions for the authenticated user."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Portfolio",
+      "item": [
+        {
+          "name": "Get Portfolio Summary",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/trade/portfolio",
+              "host": ["{{base_url}}"],
+              "path": ["trade", "portfolio"]
+            },
+            "description": "Get the user's portfolio summary including positions and balances."
+          }
+        },
+        {
+          "name": "Get Portfolio Overview",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/trade/portfolio/overview",
+              "host": ["{{base_url}}"],
+              "path": ["trade", "portfolio", "overview"]
+            },
+            "description": "Get detailed portfolio overview with performance metrics."
+          }
+        },
+        {
+          "name": "Get Portfolio History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/trade/portfolio/history?limit=30&startDate=2024-01-01",
+              "host": ["{{base_url}}"],
+              "path": ["trade", "portfolio", "history"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "30"
+                },
+                {
+                  "key": "startDate",
+                  "value": "2024-01-01"
+                }
+              ]
+            },
+            "description": "Get historical portfolio performance data."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Market Data",
+      "item": [
+        {
+          "name": "Get All Market Data",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/market-data",
+              "host": ["{{base_url}}"],
+              "path": ["market-data"]
+            },
+            "description": "Get current market data for all available symbols."
+          }
+        },
+        {
+          "name": "Get Symbol Market Data",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/market-data/AAPL",
+              "host": ["{{base_url}}"],
+              "path": ["market-data", "AAPL"]
+            },
+            "description": "Get current market data for a specific symbol."
+          }
+        },
+        {
+          "name": "Get Historical Data",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/market-data/AAPL/history?limit=100&startDate=2024-01-01",
+              "host": ["{{base_url}}"],
+              "path": ["market-data", "AAPL", "history"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "100"
+                },
+                {
+                  "key": "startDate",
+                  "value": "2024-01-01"
+                }
+              ]
+            },
+            "description": "Get historical market data for a specific symbol."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin (Admin Only)",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/users?page=1&limit=50",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "users"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ]
+            },
+            "description": "Get a paginated list of all users (Admin only)."
+          }
+        },
+        {
+          "name": "Get User Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/users/123",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "users", "123"]
+            },
+            "description": "Get detailed information about a specific user (Admin only)."
+          }
+        },
+        {
+          "name": "Reset User Balance",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"balance\": 10000\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/users/123/reset-balance",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "users", "123", "reset-balance"]
+            },
+            "description": "Reset a user's account balance (Admin only)."
+          }
+        },
+        {
+          "name": "Toggle User Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isActive\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/users/123/status",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "users", "123", "status"]
+            },
+            "description": "Activate or deactivate a user account (Admin only)."
+          }
+        },
+        {
+          "name": "Get Tradable Assets",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/assets",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "assets"]
+            },
+            "description": "Get a list of all tradable assets (Admin only)."
+          }
+        },
+        {
+          "name": "Add Tradable Asset",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"symbol\": \"TSLA\",\n  \"name\": \"Tesla Inc.\",\n  \"type\": \"stock\",\n  \"isActive\": true,\n  \"minOrderSize\": 0.01,\n  \"maxOrderSize\": 1000\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/assets",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "assets"]
+            },
+            "description": "Add a new asset to the tradable assets list (Admin only)."
+          }
+        },
+        {
+          "name": "Get System Metrics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/metrics",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "metrics"]
+            },
+            "description": "Get system performance metrics (Admin only)."
+          }
+        },
+        {
+          "name": "Get Usage Statistics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/reports/usage?period=week",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "reports", "usage"],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "week"
+                }
+              ]
+            },
+            "description": "Get platform usage statistics and analytics (Admin only)."
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000/api",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refresh_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "admin_token",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
