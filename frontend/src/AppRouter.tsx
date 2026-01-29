@@ -23,6 +23,8 @@ import Admin from "./pages/Admin";
 // Components
 import Layout from "./components/layout/Layout";
 import DemoBanner from "./components/layout/DemoBanner";
+import NotificationCenter from "./components/notifications/NotificationCenter";
+import PriceAlertsSetup from "./components/notifications/PriceAlertsSetup";
 
 // Store
 import { useAuthStore } from "./store/auth.store";
@@ -172,6 +174,10 @@ const AppRouter: React.FC = () => {
             {/* Catch all route */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
+
+          {/* Global Notification Components */}
+          <NotificationCenter />
+          <PriceAlertsSetup />
         </div>
       </Router>
     </QueryClientProvider>
