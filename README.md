@@ -1,4 +1,4 @@
-# XPro Trading Platform
+# Trading Platform
 
 A full-stack trading platform with real-time capabilities, built with Next.js frontend, Node.js/TypeScript backend, and Python financial engine.
 
