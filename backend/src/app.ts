@@ -9,12 +9,17 @@ import sequelize from "./config/database";
 import passport from "./config/passport";
 import { createClient } from "redis";
 import { generalRateLimit } from "./api/middleware/rateLimit.middleware";
+import { MarketDataService } from "./services/marketData.service";
+import "./models/MarketData"; // Import to ensure table creation
 
 dotenv.config();
 
 const app = express();
 const server = createServer(app);
 const io = new Server(server);
+
+// Set Socket.IO instance for market data service
+MarketDataService.setSocketIO(io);
 
 // Database connection
 (async () => {
@@ -76,13 +81,39 @@ app.use(generalRateLimit);
 
 // Routes will be added here
 import authRoutes from "./api/routes/auth.routes";
+import marketDataRoutes from "./api/routes/marketData.routes";
 app.use("/api/auth", authRoutes);
+app.use("/api/market-data", marketDataRoutes);
 
 // Socket.io setup
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
-  // Socket handlers will be added here
+
+  // Market data WebSocket handlers
+  socket.on("subscribe-market-data", async () => {
+    console.log(`User ${socket.id} subscribed to market data`);
+
+    // Send initial data
+    try {
+      const marketData = await MarketDataService.getAllCachedMarketData();
+      socket.emit("market-data-update", marketData);
+    } catch (error) {
+      console.error("Error sending initial market data:", error);
+    }
+  });
+
+  socket.on("unsubscribe-market-data", () => {
+    console.log(`User ${socket.id} unsubscribed from market data`);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected:", socket.id);
+  });
 });
+
+// Start market data scheduler
+import { MarketDataScheduler } from "./schedulers/marketData.scheduler";
+MarketDataScheduler.start();
 
 const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => {

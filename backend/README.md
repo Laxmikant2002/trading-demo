@@ -1,23 +1,25 @@
 # XPro Trading Backend
 
-A TypeScript-based backend for the XPro Trading application, featuring real-time trading capabilities, portfolio management, and market data integration.
+A TypeScript-based backend for the XPro Trading application, featuring comprehensive authentication, real-time market data, and trading capabilities.
 
 ## Features
 
-- User authentication and authorization
-- Real-time trading with order matching
-- Portfolio management
-- Market data integration
-- WebSocket support for real-time updates
-- Redis caching
-- MongoDB for data persistence
+- JWT-based user authentication with OAuth (Google)
+- Real-time market data for BTC, ETH, SOL with 15-minute caching
+- Technical indicators (MA 20/50, RSI 14)
+- WebSocket simulation for real-time updates
+- PostgreSQL for data persistence
+- Redis for caching and session management
+- Rate limiting and security middleware
 
 ## Tech Stack
 
 - **Node.js** with **TypeScript**
 - **Express.js** for API
 - **Socket.io** for real-time communication
-- **MongoDB** with Mongoose
+- **PostgreSQL** with Sequelize ORM
+- **Redis** for caching
+- **Twelve Data API** for market data
 - **Redis** for caching
 - **Python** engine for financial calculations
 
@@ -48,9 +50,41 @@ A TypeScript-based backend for the XPro Trading application, featuring real-time
 
 ## API Endpoints
 
+### Authentication
 - `POST /api/auth/register` - Register a new user
 - `POST /api/auth/login` - Login user
-- `POST /api/trading/orders` - Place an order
+- `POST /api/auth/logout` - Logout user
+- `GET /api/auth/google` - Google OAuth login
+- `POST /api/auth/forgot-password` - Request password reset
+- `POST /api/auth/reset-password` - Reset password
+- `POST /api/auth/change-password` - Change password (authenticated)
+- `GET /api/auth/profile` - Get user profile (authenticated)
+
+### Market Data
+- `GET /api/market-data` - Get all symbols market data
+- `GET /api/market-data/:symbol` - Get specific symbol market data
+- `GET /api/market-data/:symbol/history` - Get historical data
+- `POST /api/market-data/update` - Trigger manual update (admin only)
+
+### WebSocket Events
+- `subscribe-market-data` - Subscribe to real-time market data updates
+- `market-data-update` - Receive market data updates (every 15 minutes)
+
+Market data response format:
+```json
+{
+  "symbol": "BTC",
+  "price": 65000.50,
+  "change_24h": 2.5,
+  "high_24h": 65500,
+  "low_24h": 64500,
+  "timestamp": "2024-01-15T10:15:00Z",
+  "isDelayed": true,
+  "ma_20": 64800.25,
+  "ma_50": 64200.75,
+  "rsi_14": 65.5
+}
+```
 - `GET /api/trading/orders` - Get user orders
 - `GET /api/market/data/:symbol` - Get market data
 
