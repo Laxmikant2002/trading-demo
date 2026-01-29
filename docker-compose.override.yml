@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  postgres:
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  redis:
+    ports:
+      - "6379:6379"
+
+  node-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      NODE_ENV: development
+    ports:
+      - "3000:3000"
+    command: npm run dev
+
+  python-engine:
+    build:
+      context: ./python-engine
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./python-engine:/app
+      - /app/__pycache__
+    environment:
+      PYTHONPATH: /app
+    ports:
+      - "8000:8000"
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+  nginx:
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./frontend/build:/usr/share/nginx/html:ro
