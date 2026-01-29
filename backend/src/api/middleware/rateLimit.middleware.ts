@@ -25,7 +25,8 @@ export const generalRateLimit = rateLimit({
   legacyHeaders: false,
   store: redisClient
     ? new RedisStore({
-        sendCommand: (...args: string[]) => (redisClient as RedisClientType).sendCommand(args),
+        sendCommand: (...args: string[]) =>
+          (redisClient as RedisClientType).sendCommand(args),
       })
     : undefined,
 });
@@ -41,7 +42,8 @@ export const authRateLimit = rateLimit({
   legacyHeaders: false,
   store: redisClient
     ? new RedisStore({
-        sendCommand: (...args: string[]) => (redisClient as RedisClientType).sendCommand(args),
+        sendCommand: (...args: string[]) =>
+          (redisClient as RedisClientType).sendCommand(args),
       })
     : undefined,
 });
