@@ -1,6 +1,10 @@
-import React from 'react';
-import { useMarketStore } from '../../store/market.store';
-import { ChartBarIcon, ArrowTrendingUpIcon, ArrowTrendingDownIcon } from '@heroicons/react/24/outline';
+import React from "react";
+import { useMarketStore } from "../../store/market.store";
+import {
+  ChartBarIcon,
+  ArrowTrendingUpIcon,
+  ArrowTrendingDownIcon,
+} from "@heroicons/react/24/outline";
 
 const VolumeIndicators: React.FC = () => {
   const { assets } = useMarketStore();
@@ -16,9 +20,13 @@ const VolumeIndicators: React.FC = () => {
 
   // Calculate volume distribution
   const volumeRanges = {
-    high: assets.filter(asset => asset.volume24h > avgVolume * 1.5).length,
-    medium: assets.filter(asset => asset.volume24h >= avgVolume * 0.5 && asset.volume24h <= avgVolume * 1.5).length,
-    low: assets.filter(asset => asset.volume24h < avgVolume * 0.5).length,
+    high: assets.filter((asset) => asset.volume24h > avgVolume * 1.5).length,
+    medium: assets.filter(
+      (asset) =>
+        asset.volume24h >= avgVolume * 0.5 &&
+        asset.volume24h <= avgVolume * 1.5,
+    ).length,
+    low: assets.filter((asset) => asset.volume24h < avgVolume * 0.5).length,
   };
 
   const formatVolume = (volume: number) => {
@@ -34,9 +42,9 @@ const VolumeIndicators: React.FC = () => {
 
   const formatPrice = (price: number) => {
     if (price >= 1) {
-      return price.toLocaleString('en-US', {
-        style: 'currency',
-        currency: 'USD',
+      return price.toLocaleString("en-US", {
+        style: "currency",
+        currency: "USD",
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
       });
@@ -48,13 +56,17 @@ const VolumeIndicators: React.FC = () => {
     <div className="bg-white rounded-lg border border-gray-200 p-6">
       <div className="flex items-center mb-6">
         <ChartBarIcon className="h-6 w-6 text-blue-600 mr-2" />
-        <h3 className="text-lg font-semibold text-gray-900">Volume Indicators</h3>
+        <h3 className="text-lg font-semibold text-gray-900">
+          Volume Indicators
+        </h3>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Volume Summary */}
         <div>
-          <h4 className="text-sm font-medium text-gray-700 mb-3">24h Volume Summary</h4>
+          <h4 className="text-sm font-medium text-gray-700 mb-3">
+            24h Volume Summary
+          </h4>
           <div className="space-y-3">
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-600">Total Volume:</span>
@@ -77,7 +89,9 @@ const VolumeIndicators: React.FC = () => {
 
         {/* Volume Distribution */}
         <div>
-          <h4 className="text-sm font-medium text-gray-700 mb-3">Volume Distribution</h4>
+          <h4 className="text-sm font-medium text-gray-700 mb-3">
+            Volume Distribution
+          </h4>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
@@ -112,7 +126,9 @@ const VolumeIndicators: React.FC = () => {
 
       {/* Top Volume Assets */}
       <div className="mt-6">
-        <h4 className="text-sm font-medium text-gray-700 mb-3">Top Volume Assets</h4>
+        <h4 className="text-sm font-medium text-gray-700 mb-3">
+          Top Volume Assets
+        </h4>
         <div className="space-y-2">
           {topVolumeAssets.map((asset, index) => (
             <div
@@ -125,7 +141,9 @@ const VolumeIndicators: React.FC = () => {
                 </div>
                 <span className="text-lg">{asset.icon}</span>
                 <div>
-                  <div className="font-medium text-gray-900">{asset.symbol}</div>
+                  <div className="font-medium text-gray-900">
+                    {asset.symbol}
+                  </div>
                   <div className="text-sm text-gray-500">{asset.name}</div>
                 </div>
               </div>
@@ -137,15 +155,20 @@ const VolumeIndicators: React.FC = () => {
                 <div className="text-sm text-gray-600">
                   Vol: ${formatVolume(asset.volume24h)}
                 </div>
-                <div className={`text-xs font-medium flex items-center justify-end ${
-                  asset.changePercent24h >= 0 ? 'text-green-600' : 'text-red-600'
-                }`}>
+                <div
+                  className={`text-xs font-medium flex items-center justify-end ${
+                    asset.changePercent24h >= 0
+                      ? "text-green-600"
+                      : "text-red-600"
+                  }`}
+                >
                   {asset.changePercent24h >= 0 ? (
                     <ArrowTrendingUpIcon className="h-3 w-3 mr-1" />
                   ) : (
                     <ArrowTrendingDownIcon className="h-3 w-3 mr-1" />
                   )}
-                  {asset.changePercent24h >= 0 ? '+' : ''}{asset.changePercent24h.toFixed(2)}%
+                  {asset.changePercent24h >= 0 ? "+" : ""}
+                  {asset.changePercent24h.toFixed(2)}%
                 </div>
               </div>
             </div>

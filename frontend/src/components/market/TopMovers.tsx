@@ -1,15 +1,15 @@
-import React from 'react';
-import { useMarketStore } from '../../store/market.store';
-import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/react/24/solid';
+import React from "react";
+import { useMarketStore } from "../../store/market.store";
+import { ArrowUpIcon, ArrowDownIcon } from "@heroicons/react/24/solid";
 
 const TopMovers: React.FC = () => {
   const { topGainers, topLosers } = useMarketStore();
 
   const formatPrice = (price: number) => {
     if (price >= 1) {
-      return price.toLocaleString('en-US', {
-        style: 'currency',
-        currency: 'USD',
+      return price.toLocaleString("en-US", {
+        style: "currency",
+        currency: "USD",
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
       });
@@ -31,7 +31,7 @@ const TopMovers: React.FC = () => {
   const MoverCard = ({
     title,
     movers,
-    isGainer
+    isGainer,
   }: {
     title: string;
     movers: typeof topGainers;
@@ -67,10 +67,13 @@ const TopMovers: React.FC = () => {
               <div className="font-medium text-gray-900">
                 {formatPrice(mover.price)}
               </div>
-              <div className={`text-sm font-medium ${
-                isGainer ? 'text-green-600' : 'text-red-600'
-              }`}>
-                {mover.changePercent24h >= 0 ? '+' : ''}{mover.changePercent24h.toFixed(2)}%
+              <div
+                className={`text-sm font-medium ${
+                  isGainer ? "text-green-600" : "text-red-600"
+                }`}
+              >
+                {mover.changePercent24h >= 0 ? "+" : ""}
+                {mover.changePercent24h.toFixed(2)}%
               </div>
               <div className="text-xs text-gray-500">
                 Vol: {formatVolume(mover.volume24h)}
@@ -84,16 +87,8 @@ const TopMovers: React.FC = () => {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <MoverCard
-        title="Top Gainers"
-        movers={topGainers}
-        isGainer={true}
-      />
-      <MoverCard
-        title="Top Losers"
-        movers={topLosers}
-        isGainer={false}
-      />
+      <MoverCard title="Top Gainers" movers={topGainers} isGainer={true} />
+      <MoverCard title="Top Losers" movers={topLosers} isGainer={false} />
     </div>
   );
 };

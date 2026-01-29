@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
-import { useMarketStore } from '../../store/market.store';
-import { useTradingStore } from '../../store/trading.store';
+import React, { useEffect } from "react";
+import { useMarketStore } from "../../store/market.store";
+import { useTradingStore } from "../../store/trading.store";
 
 const MarketDepth: React.FC = () => {
   const { marketDepth, getMarketDepth } = useMarketStore();
@@ -13,16 +13,16 @@ const MarketDepth: React.FC = () => {
   }, [selectedAsset?.symbol, getMarketDepth]);
 
   const formatPrice = (price: number) => {
-    return price.toLocaleString('en-US', {
-      style: 'currency',
-      currency: 'USD',
+    return price.toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD",
       minimumFractionDigits: 2,
       maximumFractionDigits: 4,
     });
   };
 
   const formatVolume = (volume: number) => {
-    return volume.toLocaleString('en-US', {
+    return volume.toLocaleString("en-US", {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     });
@@ -38,8 +38,12 @@ const MarketDepth: React.FC = () => {
     );
   }
 
-  const maxBidVolume = Math.max(...marketDepth.bids.map(([, volume]) => volume));
-  const maxAskVolume = Math.max(...marketDepth.asks.map(([, volume]) => volume));
+  const maxBidVolume = Math.max(
+    ...marketDepth.bids.map(([, volume]) => volume),
+  );
+  const maxAskVolume = Math.max(
+    ...marketDepth.asks.map(([, volume]) => volume),
+  );
   const maxVolume = Math.max(maxBidVolume, maxAskVolume);
 
   return (
@@ -70,9 +74,7 @@ const MarketDepth: React.FC = () => {
                   {formatPrice(price)}
                 </span>
                 <div className="flex items-center space-x-2">
-                  <span className="text-gray-900">
-                    {formatVolume(volume)}
-                  </span>
+                  <span className="text-gray-900">{formatVolume(volume)}</span>
                   <div className="w-16 bg-gray-200 rounded-full h-2">
                     <div
                       className="bg-green-500 h-2 rounded-full"
@@ -101,9 +103,7 @@ const MarketDepth: React.FC = () => {
                   {formatPrice(price)}
                 </span>
                 <div className="flex items-center space-x-2">
-                  <span className="text-gray-900">
-                    {formatVolume(volume)}
-                  </span>
+                  <span className="text-gray-900">{formatVolume(volume)}</span>
                   <div className="w-16 bg-gray-200 rounded-full h-2">
                     <div
                       className="bg-red-500 h-2 rounded-full"
@@ -124,7 +124,13 @@ const MarketDepth: React.FC = () => {
             <span className="font-medium">Spread: </span>
             {formatPrice(marketDepth.asks[0][0] - marketDepth.bids[0][0])}
             <span className="text-gray-500 ml-2">
-              ({((marketDepth.asks[0][0] - marketDepth.bids[0][0]) / marketDepth.bids[0][0] * 100).toFixed(4)}%)
+              (
+              {(
+                ((marketDepth.asks[0][0] - marketDepth.bids[0][0]) /
+                  marketDepth.bids[0][0]) *
+                100
+              ).toFixed(4)}
+              %)
             </span>
           </div>
         </div>

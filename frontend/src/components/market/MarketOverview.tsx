@@ -1,19 +1,15 @@
-import React, { useEffect } from 'react';
-import { useMarketStore } from '../../store/market.store';
-import AssetList from './AssetList';
-import TopMovers from './TopMovers';
-import Watchlist from './Watchlist';
-import MarketDepth from './MarketDepth';
-import VolumeIndicators from './VolumeIndicators';
-import { useTradingStore } from '../../store/trading.store';
+import React, { useEffect } from "react";
+import { useMarketStore } from "../../store/market.store";
+import AssetList from "./AssetList";
+import TopMovers from "./TopMovers";
+import Watchlist from "./Watchlist";
+import MarketDepth from "./MarketDepth";
+import VolumeIndicators from "./VolumeIndicators";
+import { useTradingStore } from "../../store/trading.store";
 
 const MarketOverview: React.FC = () => {
-  const {
-    initializeMarketData,
-    updateAssetPrices,
-    isUpdating,
-    lastUpdate,
-  } = useMarketStore();
+  const { initializeMarketData, updateAssetPrices, isUpdating, lastUpdate } =
+    useMarketStore();
 
   const { setSelectedAsset } = useTradingStore();
 
@@ -31,7 +27,7 @@ const MarketOverview: React.FC = () => {
 
   const handleAssetSelect = (symbol: string) => {
     const { assets } = useMarketStore.getState();
-    const asset = assets.find(a => a.symbol === symbol);
+    const asset = assets.find((a) => a.symbol === symbol);
     if (asset) {
       setSelectedAsset(asset);
     }
@@ -64,9 +60,11 @@ const MarketOverview: React.FC = () => {
 
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
-            <div className={`w-2 h-2 rounded-full ${isUpdating ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`}></div>
+            <div
+              className={`w-2 h-2 rounded-full ${isUpdating ? "bg-green-500 animate-pulse" : "bg-gray-400"}`}
+            ></div>
             <span className="text-sm text-gray-600">
-              {isUpdating ? 'Live' : 'Updating...'}
+              {isUpdating ? "Live" : "Updating..."}
             </span>
           </div>
           <div className="text-sm text-gray-500">

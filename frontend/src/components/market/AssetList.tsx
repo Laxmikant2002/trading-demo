@@ -1,14 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { useMarketStore } from '../../store/market.store';
-import { MagnifyingGlassIcon, ArrowUpIcon, ArrowDownIcon, StarIcon } from '@heroicons/react/24/outline';
-import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
+import React, { useEffect, useState } from "react";
+import { useMarketStore } from "../../store/market.store";
+import {
+  MagnifyingGlassIcon,
+  ArrowUpIcon,
+  ArrowDownIcon,
+  StarIcon,
+} from "@heroicons/react/24/outline";
+import { StarIcon as StarIconSolid } from "@heroicons/react/24/solid";
 
 interface AssetListProps {
   onAssetSelect?: (symbol: string) => void;
   selectedAsset?: string;
 }
 
-const AssetList: React.FC<AssetListProps> = ({ onAssetSelect, selectedAsset }) => {
+const AssetList: React.FC<AssetListProps> = ({
+  onAssetSelect,
+  selectedAsset,
+}) => {
   const {
     filteredAssets,
     searchQuery,
@@ -39,18 +47,18 @@ const AssetList: React.FC<AssetListProps> = ({ onAssetSelect, selectedAsset }) =
 
   const handleSort = (column: typeof sortBy) => {
     if (sortBy === column) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
     } else {
       setSortBy(column);
-      setSortOrder('desc');
+      setSortOrder("desc");
     }
   };
 
   const formatPrice = (price: number) => {
     if (price >= 1) {
-      return price.toLocaleString('en-US', {
-        style: 'currency',
-        currency: 'USD',
+      return price.toLocaleString("en-US", {
+        style: "currency",
+        currency: "USD",
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
       });
@@ -82,15 +90,19 @@ const AssetList: React.FC<AssetListProps> = ({ onAssetSelect, selectedAsset }) =
 
   const getSortIcon = (column: typeof sortBy) => {
     if (sortBy !== column) return null;
-    return sortOrder === 'asc' ?
-      <ArrowUpIcon className="h-4 w-4" /> :
-      <ArrowDownIcon className="h-4 w-4" />;
+    return sortOrder === "asc" ? (
+      <ArrowUpIcon className="h-4 w-4" />
+    ) : (
+      <ArrowDownIcon className="h-4 w-4" />
+    );
   };
 
   return (
     <div className="bg-white rounded-lg border border-gray-200">
       <div className="p-4 border-b border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Market Assets</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          Market Assets
+        </h3>
 
         {/* Search Bar */}
         <div className="relative">
@@ -110,38 +122,38 @@ const AssetList: React.FC<AssetListProps> = ({ onAssetSelect, selectedAsset }) =
         <div className="col-span-1"></div>
         <div
           className="col-span-2 cursor-pointer hover:text-gray-900 flex items-center space-x-1"
-          onClick={() => handleSort('symbol')}
+          onClick={() => handleSort("symbol")}
         >
           <span>Asset</span>
-          {getSortIcon('symbol')}
+          {getSortIcon("symbol")}
         </div>
         <div
           className="col-span-2 cursor-pointer hover:text-gray-900 flex items-center space-x-1 justify-end"
-          onClick={() => handleSort('price')}
+          onClick={() => handleSort("price")}
         >
           <span>Price</span>
-          {getSortIcon('price')}
+          {getSortIcon("price")}
         </div>
         <div
           className="col-span-2 cursor-pointer hover:text-gray-900 flex items-center space-x-1 justify-end"
-          onClick={() => handleSort('change24h')}
+          onClick={() => handleSort("change24h")}
         >
           <span>24h Change</span>
-          {getSortIcon('change24h')}
+          {getSortIcon("change24h")}
         </div>
         <div
           className="col-span-3 cursor-pointer hover:text-gray-900 flex items-center space-x-1 justify-end"
-          onClick={() => handleSort('volume24h')}
+          onClick={() => handleSort("volume24h")}
         >
           <span>Volume</span>
-          {getSortIcon('volume24h')}
+          {getSortIcon("volume24h")}
         </div>
         <div
           className="col-span-2 cursor-pointer hover:text-gray-900 flex items-center space-x-1 justify-end"
-          onClick={() => handleSort('marketCap')}
+          onClick={() => handleSort("marketCap")}
         >
           <span>Market Cap</span>
-          {getSortIcon('marketCap')}
+          {getSortIcon("marketCap")}
         </div>
       </div>
 
@@ -151,7 +163,7 @@ const AssetList: React.FC<AssetListProps> = ({ onAssetSelect, selectedAsset }) =
           <div
             key={asset.symbol}
             className={`grid grid-cols-12 gap-4 px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors ${
-              selectedAsset === asset.symbol ? 'bg-blue-50 border-blue-200' : ''
+              selectedAsset === asset.symbol ? "bg-blue-50 border-blue-200" : ""
             }`}
             onClick={() => onAssetSelect?.(asset.symbol)}
           >
@@ -190,10 +202,15 @@ const AssetList: React.FC<AssetListProps> = ({ onAssetSelect, selectedAsset }) =
 
             {/* 24h Change */}
             <div className="col-span-2 flex items-center justify-end">
-              <span className={`font-medium ${
-                asset.changePercent24h >= 0 ? 'text-green-600' : 'text-red-600'
-              }`}>
-                {asset.changePercent24h >= 0 ? '+' : ''}{asset.changePercent24h.toFixed(2)}%
+              <span
+                className={`font-medium ${
+                  asset.changePercent24h >= 0
+                    ? "text-green-600"
+                    : "text-red-600"
+                }`}
+              >
+                {asset.changePercent24h >= 0 ? "+" : ""}
+                {asset.changePercent24h.toFixed(2)}%
               </span>
             </div>
 

@@ -1,15 +1,19 @@
-import React from 'react';
-import { useMarketStore } from '../../store/market.store';
-import { StarIcon, ArrowUpIcon, ArrowDownIcon } from '@heroicons/react/24/solid';
+import React from "react";
+import { useMarketStore } from "../../store/market.store";
+import {
+  StarIcon,
+  ArrowUpIcon,
+  ArrowDownIcon,
+} from "@heroicons/react/24/solid";
 
 const Watchlist: React.FC = () => {
   const { watchlistAssets, removeFromWatchlist } = useMarketStore();
 
   const formatPrice = (price: number) => {
     if (price >= 1) {
-      return price.toLocaleString('en-US', {
-        style: 'currency',
-        currency: 'USD',
+      return price.toLocaleString("en-US", {
+        style: "currency",
+        currency: "USD",
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
       });
@@ -33,9 +37,12 @@ const Watchlist: React.FC = () => {
       <div className="bg-white rounded-lg border border-gray-200 p-6">
         <div className="text-center">
           <StarIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Your Watchlist is Empty</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">
+            Your Watchlist is Empty
+          </h3>
           <p className="text-gray-500">
-            Add assets to your watchlist by clicking the star icon next to any asset in the market list.
+            Add assets to your watchlist by clicking the star icon next to any
+            asset in the market list.
           </p>
         </div>
       </div>
@@ -61,7 +68,9 @@ const Watchlist: React.FC = () => {
               <div className="flex items-center space-x-3">
                 <span className="text-2xl">{asset.icon}</span>
                 <div>
-                  <div className="font-medium text-gray-900">{asset.symbol}</div>
+                  <div className="font-medium text-gray-900">
+                    {asset.symbol}
+                  </div>
                   <div className="text-sm text-gray-500">{asset.name}</div>
                 </div>
               </div>
@@ -71,15 +80,20 @@ const Watchlist: React.FC = () => {
                   <div className="font-medium text-gray-900">
                     {formatPrice(asset.price)}
                   </div>
-                  <div className={`text-sm font-medium flex items-center ${
-                    asset.changePercent24h >= 0 ? 'text-green-600' : 'text-red-600'
-                  }`}>
+                  <div
+                    className={`text-sm font-medium flex items-center ${
+                      asset.changePercent24h >= 0
+                        ? "text-green-600"
+                        : "text-red-600"
+                    }`}
+                  >
                     {asset.changePercent24h >= 0 ? (
                       <ArrowUpIcon className="h-3 w-3 mr-1" />
                     ) : (
                       <ArrowDownIcon className="h-3 w-3 mr-1" />
                     )}
-                    {asset.changePercent24h >= 0 ? '+' : ''}{asset.changePercent24h.toFixed(2)}%
+                    {asset.changePercent24h >= 0 ? "+" : ""}
+                    {asset.changePercent24h.toFixed(2)}%
                   </div>
                 </div>
 

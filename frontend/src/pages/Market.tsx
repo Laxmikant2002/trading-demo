@@ -1,5 +1,5 @@
-import React from 'react';
-import MarketOverview from '../components/market/MarketOverview';
+import React from "react";
+import MarketOverview from "../components/market/MarketOverview";
 
 const Market: React.FC = () => {
   return (
