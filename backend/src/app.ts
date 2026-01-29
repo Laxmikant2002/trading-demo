@@ -84,10 +84,12 @@ import authRoutes from "./api/routes/auth.routes";
 import marketDataRoutes from "./api/routes/marketData.routes";
 import tradingRoutes from "./api/routes/trading.routes";
 import adminRoutes from "./api/routes/admin.routes";
+import notificationRoutes from "./api/routes/notification.routes";
 app.use("/api/auth", authRoutes);
 app.use("/api/market-data", marketDataRoutes);
 app.use("/api/trade", tradingRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 // Socket.io setup
 io.on("connection", (socket) => {
@@ -108,6 +110,21 @@ io.on("connection", (socket) => {
 
   socket.on("unsubscribe-market-data", () => {
     console.log(`User ${socket.id} unsubscribed from market data`);
+  });
+
+  // Notification WebSocket handlers
+  socket.on("subscribe-notifications", (userId: number) => {
+    console.log(
+      `User ${socket.id} subscribed to notifications for user ${userId}`,
+    );
+    socket.join(`notifications-${userId}`);
+  });
+
+  socket.on("unsubscribe-notifications", (userId: number) => {
+    console.log(
+      `User ${socket.id} unsubscribed from notifications for user ${userId}`,
+    );
+    socket.leave(`notifications-${userId}`);
   });
 
   socket.on("disconnect", () => {

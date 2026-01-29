@@ -3,6 +3,7 @@ import axios from "axios";
 import { AuthRequest } from "../middleware/auth.middleware";
 import { sendTradeConfirmationEmail } from "../../utils/email";
 import { io } from "../../app";
+import { NotificationService } from "../../services/notification.service";
 
 interface MarketOrderRequest {
   symbol: string;
@@ -100,8 +101,24 @@ export class TradingController {
         timestamp: new Date().toISOString(),
       });
 
-      // Send confirmation email
-      await sendTradeConfirmationEmail(userId, response.data);
+      // Send trade confirmation notification
+      await NotificationService.createNotification({
+        userId,
+        type: "trade_confirmation",
+        title: "Trade Executed",
+        message: `${side.toUpperCase()} ${quantity} ${symbol.toUpperCase()} at market price`,
+        data: {
+          orderId: response.data.id,
+          symbol: symbol.toUpperCase(),
+          side,
+          quantity,
+          price: response.data.price,
+          total: response.data.total,
+        },
+      });
+
+      // Check for margin calls and balance alerts after trade
+      await TradingController.checkPortfolioHealth(userId);
 
       res.json({
         success: true,
@@ -183,6 +200,9 @@ export class TradingController {
         order: response.data,
         timestamp: new Date().toISOString(),
       });
+
+      // Check for margin calls and balance alerts after trade
+      await TradingController.checkPortfolioHealth(userId);
 
       res.json({
         success: true,
@@ -707,5 +727,68 @@ export class TradingController {
       .join("\n");
 
     return csvContent;
+  }
+
+  // Check portfolio health and send alerts if needed
+  private static async checkPortfolioHealth(userId: number): Promise<void> {
+    try {
+      // Get current portfolio
+      const portfolioResponse = await axios.get(
+        `${this.TRADING_ENGINE_URL}/portfolio`,
+      );
+      const portfolio = portfolioResponse.data;
+
+      // Calculate margin level
+      const marginLevel =
+        portfolio.used_margin > 0
+          ? (portfolio.equity / portfolio.used_margin) * 100
+          : 100;
+
+      // Check for margin call (margin level below 50%)
+      if (marginLevel < 50 && marginLevel > 20) {
+        await NotificationService.createNotification({
+          userId,
+          type: "margin_call",
+          title: "Margin Warning",
+          message: `Your margin level is ${marginLevel.toFixed(2)}%. Consider reducing positions or adding funds.`,
+          data: {
+            marginLevel: marginLevel.toFixed(2),
+            equity: portfolio.equity,
+            usedMargin: portfolio.used_margin,
+          },
+        });
+      }
+
+      // Check for critical margin call (margin level below 20%)
+      if (marginLevel < 20) {
+        await NotificationService.createNotification({
+          userId,
+          type: "margin_call",
+          title: "Critical Margin Call",
+          message: `URGENT: Your margin level is critically low at ${marginLevel.toFixed(2)}%. Immediate action required.`,
+          data: {
+            marginLevel: marginLevel.toFixed(2),
+            equity: portfolio.equity,
+            usedMargin: portfolio.used_margin,
+          },
+        });
+      }
+
+      // Check for low balance alert (below $1000)
+      if (portfolio.equity < 1000) {
+        await NotificationService.createNotification({
+          userId,
+          type: "balance_alert",
+          title: "Low Balance Alert",
+          message: `Your account balance is low: $${portfolio.equity.toFixed(2)}. Consider adding funds.`,
+          data: {
+            balance: portfolio.equity,
+            threshold: 1000,
+          },
+        });
+      }
+    } catch (error) {
+      console.error("Error checking portfolio health:", error);
+    }
   }
 }

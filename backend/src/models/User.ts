@@ -18,6 +18,28 @@ export interface IUser extends Model {
   isActive: boolean;
   demoBalance: number;
   lastLoginAt?: Date;
+  notificationPreferences: {
+    tradeConfirmations: {
+      inApp: boolean;
+      email: boolean;
+    };
+    balanceAlerts: {
+      inApp: boolean;
+      email: boolean;
+    };
+    priceAlerts: {
+      inApp: boolean;
+      email: boolean;
+    };
+    marginCalls: {
+      inApp: boolean;
+      email: boolean;
+    };
+    systemNotifications: {
+      inApp: boolean;
+      email: boolean;
+    };
+  };
   createdAt: Date;
   updatedAt: Date;
   checkPassword(password: string): Promise<boolean>;
@@ -91,6 +113,16 @@ const User = sequelize.define<IUser>(
     lastLoginAt: {
       type: DataTypes.DATE,
       allowNull: true,
+    },
+    notificationPreferences: {
+      type: DataTypes.JSON,
+      defaultValue: {
+        tradeConfirmations: { inApp: true, email: true },
+        balanceAlerts: { inApp: true, email: true },
+        priceAlerts: { inApp: true, email: false },
+        marginCalls: { inApp: true, email: true },
+        systemNotifications: { inApp: true, email: false },
+      },
     },
   },
   {
