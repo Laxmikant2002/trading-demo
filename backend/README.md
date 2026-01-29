@@ -68,6 +68,16 @@ A TypeScript-based backend for the XPro Trading application, featuring comprehen
 - `GET /api/market-data/:symbol/history` - Get historical data
 - `POST /api/market-data/update` - Trigger manual update (admin only)
 
+### Trading (All require authentication)
+
+- `POST /api/trade/market` - Place market order
+- `POST /api/trade/limit` - Place limit order
+- `POST /api/trade/stop-loss` - Set stop loss on position
+- `POST /api/trade/take-profit` - Set take profit on position
+- `GET /api/trade/orders` - Get user's orders
+- `GET /api/trade/positions` - Get user's positions
+- `GET /api/trade/portfolio` - Get user's portfolio summary
+
 ### WebSocket Events
 
 - `subscribe-market-data` - Subscribe to real-time market data updates

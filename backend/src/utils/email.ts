@@ -71,3 +71,40 @@ export const sendPasswordResetEmail = async (
     html,
   });
 };
+
+export const sendTradeConfirmationEmail = async (
+  userId: number,
+  order: any,
+): Promise<boolean> => {
+  // In a real application, you'd look up the user's email from the database
+  // For now, we'll use a placeholder email
+  const userEmail = `user${userId}@example.com`;
+
+  const orderType = order.type.toUpperCase();
+  const side = order.side.toUpperCase();
+  const symbol = order.symbol;
+  const quantity = order.quantity;
+  const price = order.filled_price || order.price || "Market";
+
+  const html = `
+    <h1>Trade Confirmation</h1>
+    <div style="background-color: #f5f5f5; padding: 20px; border-radius: 5px; margin: 20px 0;">
+      <h2>${orderType} Order Executed</h2>
+      <p><strong>Order ID:</strong> ${order.id}</p>
+      <p><strong>Symbol:</strong> ${symbol}</p>
+      <p><strong>Side:</strong> ${side}</p>
+      <p><strong>Quantity:</strong> ${quantity}</p>
+      <p><strong>Price:</strong> ${price}</p>
+      <p><strong>Status:</strong> ${order.status.toUpperCase()}</p>
+      <p><strong>Timestamp:</strong> ${new Date(order.timestamp).toLocaleString()}</p>
+    </div>
+    <p>Thank you for trading with XPro Trading!</p>
+    <p>If you have any questions, please contact our support team.</p>
+  `;
+
+  return sendEmail({
+    to: userEmail,
+    subject: `Trade Confirmation - ${orderType} ${symbol} ${side}`,
+    html,
+  });
+};

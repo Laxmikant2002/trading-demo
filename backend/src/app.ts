@@ -82,8 +82,10 @@ app.use(generalRateLimit);
 // Routes will be added here
 import authRoutes from "./api/routes/auth.routes";
 import marketDataRoutes from "./api/routes/marketData.routes";
+import tradingRoutes from "./api/routes/trading.routes";
 app.use("/api/auth", authRoutes);
 app.use("/api/market-data", marketDataRoutes);
+app.use("/api/trade", tradingRoutes);
 
 // Socket.io setup
 io.on("connection", (socket) => {
@@ -120,4 +122,5 @@ server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
+export { io };
 export default app;

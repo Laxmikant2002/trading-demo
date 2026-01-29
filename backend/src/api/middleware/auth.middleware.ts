@@ -8,6 +8,8 @@ interface AuthRequest extends Request {
   user?: TokenPayload;
 }
 
+export { AuthRequest };
+
 // Configure JWT strategy
 const jwtOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
