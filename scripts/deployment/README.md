@@ -5,18 +5,22 @@ This directory contains comprehensive deployment scripts for the XPro Trading Pl
 ## 📁 Scripts Overview
 
 ### Development Environment
+
 - **`dev-setup.sh`** - Complete development environment setup with Docker Compose
 - **`dev-db.sh`** - Database management utilities for development
 
 ### Production Environment
+
 - **`prod-deploy.sh`** - Full production deployment with PM2, nginx, SSL, and monitoring
 - **`pm2.config.js`** - PM2 process manager configuration
 
 ### Cloud Deployment
+
 - **`aws-setup.sh`** - AWS infrastructure setup (ECS, RDS, ElastiCache, VPC)
 - **`railway-deploy.sh`** - Railway deployment for simpler cloud hosting
 
 ### CI/CD
+
 - **`.github/workflows/ci-cd.yml`** - GitHub Actions CI/CD pipeline
 
 ## 🚀 Quick Start
@@ -28,6 +32,7 @@ This directory contains comprehensive deployment scripts for the XPro Trading Pl
    - Git repository cloned
 
 2. **Run development setup:**
+
    ```bash
    cd scripts/deployment
    chmod +x dev-setup.sh dev-db.sh
@@ -75,6 +80,7 @@ This directory contains comprehensive deployment scripts for the XPro Trading Pl
    - SMTP credentials for SSL certificate
 
 2. **Deploy:**
+
    ```bash
    # Set environment variables
    export DOMAIN=yourdomain.com
@@ -100,6 +106,7 @@ This directory contains comprehensive deployment scripts for the XPro Trading Pl
    - Railway CLI installed and logged in
 
 2. **Deploy:**
+
    ```bash
    # Set domain (optional)
    export DOMAIN=yourdomain.com
@@ -122,6 +129,7 @@ This directory contains comprehensive deployment scripts for the XPro Trading Pl
    - AWS account with appropriate permissions
 
 2. **Setup infrastructure:**
+
    ```bash
    # Set AWS region
    export AWS_REGION=us-east-1
@@ -139,21 +147,25 @@ This directory contains comprehensive deployment scripts for the XPro Trading Pl
 The GitHub Actions pipeline includes:
 
 ### Automated Testing
+
 - Node.js and Python test suites
 - Database integration tests
 - Code coverage reporting
 
 ### Docker Build & Push
+
 - Multi-stage Docker builds
 - Image scanning for vulnerabilities
 - Push to GitHub Container Registry
 
 ### Deployment
+
 - Staging deployment on develop branch
 - Production deployment on main branch
 - AWS ECS deployment with migrations
 
 ### Security
+
 - Trivy vulnerability scanning
 - SARIF report generation
 - Slack notifications
@@ -184,6 +196,7 @@ LOG_LEVEL=info
 ### PM2 Configuration
 
 The `pm2.config.js` file includes:
+
 - Cluster mode for Node.js API
 - Fork mode for Python trading engine
 - Automatic restarts and memory limits
@@ -193,6 +206,7 @@ The `pm2.config.js` file includes:
 ### nginx Configuration
 
 Located in `nginx/nginx.conf`, includes:
+
 - Reverse proxy setup
 - SSL/TLS configuration
 - Rate limiting
@@ -203,18 +217,21 @@ Located in `nginx/nginx.conf`, includes:
 ## 📊 Monitoring & Maintenance
 
 ### Production Monitoring
+
 - PM2 monitoring dashboard
 - Application logs in `/var/www/xpro-trading/logs/`
 - nginx access/error logs
 - System resource monitoring
 
 ### Database Maintenance
+
 - Automatic daily backups
 - Log rotation
 - Connection pooling
 - Performance monitoring
 
 ### Updates
+
 - Zero-downtime deployments with PM2
 - Database migrations with rollback capability
 - Automated testing before deployment
@@ -270,6 +287,7 @@ docker-compose logs -f
 ## 📞 Support
 
 For deployment issues:
+
 1. Check the troubleshooting section above
 2. Review logs for error messages
 3. Verify environment configuration
@@ -278,6 +296,7 @@ For deployment issues:
 ## 🤝 Contributing
 
 When adding new deployment features:
+
 1. Update relevant scripts
 2. Test on all supported platforms
 3. Update this README
