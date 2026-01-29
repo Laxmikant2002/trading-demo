@@ -42,4 +42,14 @@ router.get("/portfolio", async (req, res) => {
   await TradingController.getPortfolio(req as any, res);
 });
 
+// Get portfolio overview
+router.get("/portfolio/overview", async (req, res) => {
+  await TradingController.getPortfolioOverview(req as any, res);
+});
+
+// Get portfolio history
+router.get("/portfolio/history", async (req, res) => {
+  await TradingController.getPortfolioHistory(req as any, res);
+});
+
 export default router;

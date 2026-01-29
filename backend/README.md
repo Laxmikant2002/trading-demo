@@ -78,6 +78,11 @@ A TypeScript-based backend for the XPro Trading application, featuring comprehen
 - `GET /api/trade/positions` - Get user's positions
 - `GET /api/trade/portfolio` - Get user's portfolio summary
 
+### Portfolio Tracking (All require authentication)
+
+- `GET /api/portfolio/overview` - Get portfolio overview with balance, P&L, and performance chart
+- `GET /api/portfolio/history?startDate=&endDate=&format=csv` - Get portfolio history with optional CSV export
+
 ### WebSocket Events
 
 - `subscribe-market-data` - Subscribe to real-time market data updates

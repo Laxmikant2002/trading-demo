@@ -370,6 +370,126 @@ export class TradingController {
     }
   }
 
+  static async getPortfolioOverview(req: AuthRequest, res: Response) {
+    try {
+      const userId = req.user?.userId;
+
+      if (!userId) {
+        return res.status(401).json({ error: "User not authenticated" });
+      }
+
+      // Get portfolio summary from trading engine
+      const portfolioResponse = await axios.get(
+        `${this.TRADING_ENGINE_URL}/portfolio`,
+      );
+      const portfolio = portfolioResponse.data;
+
+      // Get performance metrics
+      const performanceResponse = await axios.get(
+        `${this.TRADING_ENGINE_URL}/performance`,
+      );
+      const performance = performanceResponse.data;
+
+      // Get trades for chart data
+      const tradesResponse = await axios.get(
+        `${this.TRADING_ENGINE_URL}/trades`,
+      );
+      const trades = tradesResponse.data;
+
+      // Calculate performance chart data (equity curve)
+      const performanceChart = this.calculatePerformanceChart(
+        trades,
+        portfolio.initial_balance,
+      );
+
+      const overview = {
+        totalBalance: portfolio.equity,
+        unrealizedPL: portfolio.unrealized_pnl,
+        realizedPL: performance.trading_stats.total_realized_pnl,
+        marginLevel: portfolio.margin_level,
+        openPositions: portfolio.positions,
+        performanceChart: performanceChart,
+      };
+
+      res.json(overview);
+    } catch (error: any) {
+      console.error("Error fetching portfolio overview:", error);
+      res.status(500).json({
+        error: "Failed to fetch portfolio overview",
+        details: error.response?.data || error.message,
+      });
+    }
+  }
+
+  static async getPortfolioHistory(req: AuthRequest, res: Response) {
+    try {
+      const userId = req.user?.userId;
+      const { startDate, endDate, format } = req.query;
+
+      if (!userId) {
+        return res.status(401).json({ error: "User not authenticated" });
+      }
+
+      // Get trades from trading engine
+      const tradesResponse = await axios.get(
+        `${this.TRADING_ENGINE_URL}/trades`,
+      );
+      let trades = tradesResponse.data;
+
+      // Filter by date range if provided
+      if (startDate || endDate) {
+        const start = startDate ? new Date(startDate as string) : null;
+        const end = endDate ? new Date(endDate as string) : null;
+
+        trades = trades.filter((trade: any) => {
+          const tradeDate = new Date(trade.timestamp);
+          if (start && tradeDate < start) return false;
+          if (end && tradeDate > end) return false;
+          return true;
+        });
+      }
+
+      // Calculate performance metrics
+      const metrics = this.calculatePortfolioMetrics(trades);
+
+      // If CSV export requested
+      if (format === "csv") {
+        const csvData = this.generateTradesCSV(trades);
+        res.setHeader("Content-Type", "text/csv");
+        res.setHeader(
+          "Content-Disposition",
+          'attachment; filename="portfolio-history.csv"',
+        );
+        return res.send(csvData);
+      }
+
+      // Calculate daily P&L breakdown
+      const dailyPL = this.calculateDailyPL(trades);
+
+      // Calculate performance graph data (equity curve)
+      const performanceGraph = this.calculatePerformanceChart(trades, 10000); // Assuming initial balance
+
+      const history = {
+        period: {
+          startDate: startDate || null,
+          endDate: endDate || null,
+        },
+        metrics: metrics,
+        dailyPL: dailyPL,
+        performanceGraph: performanceGraph,
+        trades: trades,
+      };
+
+      res.json(history);
+    } catch (error: any) {
+      console.error("Error fetching portfolio history:", error);
+      res.status(500).json({
+        error: "Failed to fetch portfolio history",
+        details: error.response?.data || error.message,
+      });
+    }
+  }
+
   private static async getCurrentMarketPrice(
     symbol: string,
   ): Promise<number | null> {
@@ -440,5 +560,152 @@ export class TradingController {
         message: "Failed to validate trade",
       };
     }
+  }
+
+  private static calculatePerformanceChart(
+    trades: any[],
+    initialBalance: number,
+  ): any[] {
+    let equity = initialBalance;
+    const chartData = [
+      {
+        timestamp: new Date("2024-01-01").toISOString(),
+        equity: initialBalance,
+      },
+    ];
+
+    // Sort trades by timestamp
+    const sortedTrades = [...trades].sort(
+      (a, b) =>
+        new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
+    );
+
+    for (const trade of sortedTrades) {
+      equity += trade.realized_pnl - trade.commission;
+      chartData.push({
+        timestamp: trade.timestamp,
+        equity: equity,
+      });
+    }
+
+    return chartData;
+  }
+
+  private static calculatePortfolioMetrics(trades: any[]): any {
+    if (trades.length === 0) {
+      return {
+        totalTrades: 0,
+        winningTrades: 0,
+        losingTrades: 0,
+        winRate: 0,
+        averageProfit: 0,
+        averageLoss: 0,
+        profitFactor: 0,
+        totalRealizedPL: 0,
+        totalCommission: 0,
+        netPL: 0,
+      };
+    }
+
+    const winningTrades = trades.filter((t) => t.realized_pnl > 0);
+    const losingTrades = trades.filter((t) => t.realized_pnl < 0);
+
+    const totalRealizedPL = trades.reduce((sum, t) => sum + t.realized_pnl, 0);
+    const totalCommission = trades.reduce((sum, t) => sum + t.commission, 0);
+    const netPL = totalRealizedPL - totalCommission;
+
+    const averageProfit =
+      winningTrades.length > 0
+        ? winningTrades.reduce((sum, t) => sum + t.realized_pnl, 0) /
+          winningTrades.length
+        : 0;
+
+    const averageLoss =
+      losingTrades.length > 0
+        ? Math.abs(
+            losingTrades.reduce((sum, t) => sum + t.realized_pnl, 0) /
+              losingTrades.length,
+          )
+        : 0;
+
+    const profitFactor = averageLoss > 0 ? averageProfit / averageLoss : 0;
+
+    return {
+      totalTrades: trades.length,
+      winningTrades: winningTrades.length,
+      losingTrades: losingTrades.length,
+      winRate: (winningTrades.length / trades.length) * 100,
+      averageProfit: averageProfit,
+      averageLoss: averageLoss,
+      profitFactor: profitFactor,
+      totalRealizedPL: totalRealizedPL,
+      totalCommission: totalCommission,
+      netPL: netPL,
+    };
+  }
+
+  private static calculateDailyPL(trades: any[]): any[] {
+    const dailyMap = new Map<
+      string,
+      {
+        date: string;
+        realizedPL: number;
+        commission: number;
+        netPL: number;
+        tradeCount: number;
+      }
+    >();
+
+    for (const trade of trades) {
+      const date = new Date(trade.timestamp).toISOString().split("T")[0];
+      const existing = dailyMap.get(date) || {
+        date,
+        realizedPL: 0,
+        commission: 0,
+        netPL: 0,
+        tradeCount: 0,
+      };
+
+      existing.realizedPL += trade.realized_pnl;
+      existing.commission += trade.commission;
+      existing.netPL += trade.realized_pnl - trade.commission;
+      existing.tradeCount += 1;
+
+      dailyMap.set(date, existing);
+    }
+
+    return Array.from(dailyMap.values()).sort((a, b) =>
+      a.date.localeCompare(b.date),
+    );
+  }
+
+  private static generateTradesCSV(trades: any[]): string {
+    const headers = [
+      "Timestamp",
+      "Symbol",
+      "Side",
+      "Quantity",
+      "Price",
+      "Realized P&L",
+      "Commission",
+      "Net P&L",
+    ];
+
+    const rows = trades.map((trade) => [
+      trade.timestamp,
+      trade.symbol,
+      trade.side,
+      trade.quantity,
+      trade.price,
+      trade.realized_pnl,
+      trade.commission,
+      trade.realized_pnl - trade.commission,
+    ]);
+
+    const csvContent = [headers, ...rows]
+      .map((row) => row.map((field) => `"${field}"`).join(","))
+      .join("\n");
+
+    return csvContent;
   }
 }
