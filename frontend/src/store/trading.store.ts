@@ -24,6 +24,9 @@ export interface Balance {
   currency: string;
 }
 
+export type ChartType = "candlestick" | "line";
+export type Timeframe = "1m" | "5m" | "15m" | "1h" | "1d";
+
 export interface TradingState {
   // Selected asset
   selectedAsset: Asset | null;
@@ -39,6 +42,10 @@ export interface TradingState {
   currentPrice: number;
   priceChange: number;
 
+  // Chart state
+  chartType: ChartType;
+  timeframe: Timeframe;
+
   // UI state
   isLoading: boolean;
   error: string | null;
@@ -48,6 +55,8 @@ export interface TradingState {
   updateOrderForm: (updates: Partial<OrderForm>) => void;
   updateBalance: (balance: Balance) => void;
   updatePrice: (price: number, change: number) => void;
+  setChartType: (chartType: ChartType) => void;
+  setTimeframe: (timeframe: Timeframe) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
   resetOrderForm: () => void;
@@ -102,6 +111,8 @@ export const useTradingStore = create<TradingState>((set, get) => ({
   balance: initialBalance,
   currentPrice: initialAssets[0].price,
   priceChange: initialAssets[0].change24h,
+  chartType: "candlestick",
+  timeframe: "15m",
   isLoading: false,
   error: null,
 
@@ -121,6 +132,10 @@ export const useTradingStore = create<TradingState>((set, get) => ({
 
   updatePrice: (price, change) =>
     set({ currentPrice: price, priceChange: change }),
+
+  setChartType: (chartType) => set({ chartType }),
+
+  setTimeframe: (timeframe) => set({ timeframe }),
 
   setLoading: (loading) => set({ isLoading: loading }),
 

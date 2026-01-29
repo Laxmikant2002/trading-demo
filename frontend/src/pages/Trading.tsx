@@ -4,6 +4,7 @@ import OrderForm from "../components/trading/OrderForm";
 import PriceTicker from "../components/trading/PriceTicker";
 import BalanceDisplay from "../components/trading/BalanceDisplay";
 import QuickTradeButtons from "../components/trading/QuickTradeButtons";
+import TradingChart from "../components/trading/TradingChart";
 
 const Trading: React.FC = () => {
   return (
@@ -15,6 +16,11 @@ const Trading: React.FC = () => {
           <p className="mt-2 text-gray-600">
             Buy and sell cryptocurrencies with advanced trading tools
           </p>
+        </div>
+
+        {/* Trading Chart */}
+        <div className="mb-8">
+          <TradingChart height={500} />
         </div>
 
         {/* Main Trading Interface */}
