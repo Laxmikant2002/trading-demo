@@ -18,8 +18,13 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server);
 
+import { WebSocketService } from "./services/websocket.service";
+
 // Set Socket.IO instance for market data service
 MarketDataService.setSocketIO(io);
+
+// Initialize WebSocket service
+WebSocketService.initialize(io);
 
 // Database connection
 (async () => {
@@ -91,46 +96,8 @@ app.use("/api/trade", tradingRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/notifications", notificationRoutes);
 
-// Socket.io setup
-io.on("connection", (socket) => {
-  console.log("User connected:", socket.id);
-
-  // Market data WebSocket handlers
-  socket.on("subscribe-market-data", async () => {
-    console.log(`User ${socket.id} subscribed to market data`);
-
-    // Send initial data
-    try {
-      const marketData = await MarketDataService.getAllCachedMarketData();
-      socket.emit("market-data-update", marketData);
-    } catch (error) {
-      console.error("Error sending initial market data:", error);
-    }
-  });
-
-  socket.on("unsubscribe-market-data", () => {
-    console.log(`User ${socket.id} unsubscribed from market data`);
-  });
-
-  // Notification WebSocket handlers
-  socket.on("subscribe-notifications", (userId: number) => {
-    console.log(
-      `User ${socket.id} subscribed to notifications for user ${userId}`,
-    );
-    socket.join(`notifications-${userId}`);
-  });
-
-  socket.on("unsubscribe-notifications", (userId: number) => {
-    console.log(
-      `User ${socket.id} unsubscribed from notifications for user ${userId}`,
-    );
-    socket.leave(`notifications-${userId}`);
-  });
-
-  socket.on("disconnect", () => {
-    console.log("User disconnected:", socket.id);
-  });
-});
+// Socket.io setup is now handled by WebSocketService
+// WebSocketService.initialize(io);
 
 // Start market data scheduler
 import { MarketDataScheduler } from "./schedulers/marketData.scheduler";

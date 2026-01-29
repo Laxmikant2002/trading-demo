@@ -200,10 +200,7 @@ export class MarketDataService {
       formattedData.push(formattedItem);
     }
 
-    // Emit WebSocket update
-    if (this.io) {
-      this.io.emit("market-data-update", formattedData);
-    }
+    // WebSocket broadcasting is now handled by WebSocketService
   }
 
   static async getCachedMarketData(symbol: string): Promise<any | null> {

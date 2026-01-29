@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import axios from "axios";
 import { AuthRequest } from "../middleware/auth.middleware";
 import { sendTradeConfirmationEmail } from "../../utils/email";
-import { io } from "../../app";
+import { WebSocketService } from "../../services/websocket.service";
 import { NotificationService } from "../../services/notification.service";
 
 interface MarketOrderRequest {
@@ -94,11 +94,9 @@ export class TradingController {
       );
 
       // Send WebSocket notification
-      io.emit("order-update", {
-        userId,
+      WebSocketService.broadcastTradeUpdate(userId, {
         type: "market_order_placed",
         order: response.data,
-        timestamp: new Date().toISOString(),
       });
 
       // Send trade confirmation notification
@@ -194,11 +192,9 @@ export class TradingController {
       );
 
       // Send WebSocket notification
-      io.emit("order-update", {
-        userId,
+      WebSocketService.broadcastTradeUpdate(userId, {
         type: "limit_order_placed",
         order: response.data,
-        timestamp: new Date().toISOString(),
       });
 
       // Check for margin calls and balance alerts after trade
@@ -253,12 +249,10 @@ export class TradingController {
       );
 
       // Send WebSocket notification
-      io.emit("order-update", {
-        userId,
+      WebSocketService.broadcastTradeUpdate(userId, {
         type: "stop_loss_set",
         orderId,
         stopPrice,
-        timestamp: new Date().toISOString(),
       });
 
       res.json({
@@ -311,12 +305,10 @@ export class TradingController {
       );
 
       // Send WebSocket notification
-      io.emit("order-update", {
-        userId,
+      WebSocketService.broadcastTradeUpdate(userId, {
         type: "take_profit_set",
         orderId,
         takeProfitPrice,
-        timestamp: new Date().toISOString(),
       });
 
       res.json({

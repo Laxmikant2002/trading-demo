@@ -3,13 +3,13 @@ import { MarketDataService } from "../services/marketData.service";
 
 export class MarketDataScheduler {
   static start() {
-    // Run every 15 minutes
-    cron.schedule("*/15 * * * *", async () => {
-      console.log("Running scheduled market data update...");
+    // Run every 30 seconds for real-time price updates
+    cron.schedule("*/30 * * * * *", async () => {
+      console.log("Running real-time market data update...");
       try {
         await MarketDataService.updateMarketData();
       } catch (error) {
-        console.error("Scheduled market data update failed:", error);
+        console.error("Real-time market data update failed:", error);
       }
     });
 
@@ -23,6 +23,6 @@ export class MarketDataScheduler {
       }
     });
 
-    console.log("Market data scheduler started");
+    console.log("Market data scheduler started (30-second intervals)");
   }
 }

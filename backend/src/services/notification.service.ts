@@ -1,7 +1,7 @@
 import Notification, { INotification } from "../models/Notification";
 import User, { IUser } from "../models/User";
 import { sendEmail } from "../utils/email";
-// import { io } from "../app";
+import { WebSocketService } from "./websocket.service";
 import { Op } from "sequelize";
 
 export interface NotificationData {
@@ -100,17 +100,16 @@ export class NotificationService {
     user: IUser,
   ): Promise<void> {
     try {
-      // Temporarily disabled to fix import issues
-      // io.to(`notifications-${user.id}`).emit('notification', {
-      //   id: notification.id,
-      //   type: notification.type,
-      //   title: notification.title,
-      //   message: notification.message,
-      //   data: notification.data,
-      //   timestamp: notification.createdAt,
-      // });
+      WebSocketService.broadcastNotification(user.id, {
+        id: notification.id,
+        type: notification.type,
+        title: notification.title,
+        message: notification.message,
+        data: notification.data,
+        timestamp: notification.createdAt,
+      });
       console.log(
-        `In-app notification to user ${user.id}: ${notification.title}`,
+        `In-app notification sent to user ${user.id}: ${notification.title}`,
       );
     } catch (error) {
       console.error("Error sending in-app notification:", error);
