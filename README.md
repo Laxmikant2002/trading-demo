@@ -1,23 +1,180 @@
-# Getting Started with Create React App
+# XPro Trading Platform
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A full-stack trading platform with real-time capabilities, built with Next.js frontend, Node.js/TypeScript backend, and Python financial engine.
 
-## Available Scripts
+## Project Structure
 
-In the project directory, you can run:
+```
+xpro-trading/
+├── 📁 frontend/          # Next.js React application
+│   ├── src/
+│   ├── public/
+│   └── package.json
+│
+├── 📁 backend/           # Node.js API server
+│   ├── src/
+│   └── package.json
+│
+├── 📁 python-engine/     # Python financial engine
+│   ├── trading_engine/
+│   └── requirements.txt
+│
+├── 📁 shared/           # Shared types and constants
+│   ├── types/
+│   └── constants/
+│
+├── docker-compose.yml
+└── README.md
+```
 
-### `npm start`
+## Getting Started
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Prerequisites
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- Node.js 18+
+- Python 3.9+
+- MongoDB
+- Redis
 
-### `npm test`
+### Installation
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. **Clone the repository**
+
+   ```bash
+   git clone <repository-url>
+   cd xpro-trading
+   ```
+
+2. **Install frontend dependencies**
+
+   ```bash
+   cd frontend
+   npm install
+   ```
+
+3. **Install backend dependencies**
+
+   ```bash
+   cd ../backend
+   npm install
+   ```
+
+4. **Install Python dependencies**
+   ```bash
+   cd ../python-engine
+   pip install -r requirements.txt
+   ```
+
+### Running the Application
+
+1. **Start infrastructure (MongoDB & Redis)**
+
+   ```bash
+   docker-compose up -d mongo redis
+   ```
+
+2. **Start the backend**
+
+   ```bash
+   cd backend
+   npm run dev
+   ```
+
+3. **Start the frontend**
+
+   ```bash
+   cd frontend
+   npm run dev
+   ```
+
+4. **Start the Python engine (optional)**
+   ```bash
+   cd python-engine
+   python main.py
+   ```
+
+The application will be available at:
+
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:3001
+
+## Tech Stack
+
+### Frontend
+
+- Next.js 14
+- React 18
+- TypeScript
+- Tailwind CSS
+
+### Backend
+
+- Node.js
+- TypeScript
+- Express.js
+- Socket.io
+- MongoDB with Mongoose
+- Redis
+- JWT Authentication
+
+### Python Engine
+
+- Python 3.9+
+- Pandas
+- NumPy
+- Financial calculations and risk management
+
+## Features
+
+- Real-time trading
+- Portfolio management
+- Market data integration
+- User authentication
+- Order matching engine
+- Risk management
+- WebSocket real-time updates
+
+## Development
+
+### Running Tests
+
+```bash
+# Frontend tests
+cd frontend && npm test
+
+# Backend tests
+cd backend && npm test
+```
+
+### Building for Production
+
+```bash
+# Frontend
+cd frontend && npm run build
+
+# Backend
+cd backend && npm run build
+```
+
+## Docker
+
+To run the entire stack with Docker:
+
+```bash
+docker-compose up --build
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests
+5. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License.
 
 ### `npm run build`
 
