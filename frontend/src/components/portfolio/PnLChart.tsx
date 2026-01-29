@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -9,9 +9,9 @@ import {
   Tooltip,
   Legend,
   ChartOptions,
-} from 'chart.js';
-import { Line } from 'react-chartjs-2';
-import { usePortfolioStore } from '../../store/portfolio.store';
+} from "chart.js";
+import { Line } from "react-chartjs-2";
+import { usePortfolioStore } from "../../store/portfolio.store";
 
 ChartJS.register(
   CategoryScale,
@@ -20,31 +20,31 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 );
 
 const PnLChart: React.FC = () => {
   const { equityCurve } = usePortfolioStore();
 
   const chartData = useMemo(() => {
-    const labels = equityCurve.map(point =>
-      new Intl.DateTimeFormat('en-US', {
-        month: 'short',
-        day: 'numeric',
-      }).format(point.timestamp)
+    const labels = equityCurve.map((point) =>
+      new Intl.DateTimeFormat("en-US", {
+        month: "short",
+        day: "numeric",
+      }).format(point.timestamp),
     );
 
-    const equityData = equityCurve.map(point => point.equity);
-    const balanceData = equityCurve.map(point => point.balance);
+    const equityData = equityCurve.map((point) => point.equity);
+    const balanceData = equityCurve.map((point) => point.balance);
 
     return {
       labels,
       datasets: [
         {
-          label: 'Total Equity',
+          label: "Total Equity",
           data: equityData,
-          borderColor: '#2196F3',
-          backgroundColor: 'rgba(33, 150, 243, 0.1)',
+          borderColor: "#2196F3",
+          backgroundColor: "rgba(33, 150, 243, 0.1)",
           borderWidth: 2,
           fill: false,
           tension: 0.1,
@@ -52,10 +52,10 @@ const PnLChart: React.FC = () => {
           pointHoverRadius: 4,
         },
         {
-          label: 'Cash Balance',
+          label: "Cash Balance",
           data: balanceData,
-          borderColor: '#4CAF50',
-          backgroundColor: 'rgba(76, 175, 80, 0.1)',
+          borderColor: "#4CAF50",
+          backgroundColor: "rgba(76, 175, 80, 0.1)",
           borderWidth: 2,
           fill: false,
           tension: 0.1,
@@ -66,26 +66,26 @@ const PnLChart: React.FC = () => {
     };
   }, [equityCurve]);
 
-  const options: ChartOptions<'line'> = {
+  const options: ChartOptions<"line"> = {
     responsive: true,
     maintainAspectRatio: false,
     interaction: {
-      mode: 'index',
+      mode: "index",
       intersect: false,
     },
     plugins: {
       legend: {
-        position: 'top' as const,
+        position: "top" as const,
         labels: {
           usePointStyle: true,
           padding: 20,
         },
       },
       tooltip: {
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-        titleColor: '#ffffff',
-        bodyColor: '#ffffff',
-        borderColor: '#333333',
+        backgroundColor: "rgba(0, 0, 0, 0.8)",
+        titleColor: "#ffffff",
+        bodyColor: "#ffffff",
+        borderColor: "#333333",
         borderWidth: 1,
         cornerRadius: 8,
         displayColors: true,
@@ -93,10 +93,13 @@ const PnLChart: React.FC = () => {
           label: (context) => {
             const value = context.parsed.y;
             if (value === null) return `${context.dataset.label}: $0.00`;
-            return `${context.dataset.label}: $${value.toLocaleString(undefined, {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}`;
+            return `${context.dataset.label}: $${value.toLocaleString(
+              undefined,
+              {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              },
+            )}`;
           },
         },
       },
@@ -106,7 +109,7 @@ const PnLChart: React.FC = () => {
         display: true,
         title: {
           display: true,
-          text: 'Date',
+          text: "Date",
         },
         grid: {
           display: false,
@@ -116,10 +119,10 @@ const PnLChart: React.FC = () => {
         display: true,
         title: {
           display: true,
-          text: 'Value ($)',
+          text: "Value ($)",
         },
         grid: {
-          color: '#f3f4f6',
+          color: "#f3f4f6",
         },
         ticks: {
           callback: (value) => {
@@ -143,7 +146,7 @@ const PnLChart: React.FC = () => {
     const lastEquity = equityCurve[equityCurve.length - 1].equity;
     const totalReturn = ((lastEquity - firstEquity) / firstEquity) * 100;
 
-    const peak = Math.max(...equityCurve.map(p => p.equity));
+    const peak = Math.max(...equityCurve.map((p) => p.equity));
     const currentDrawdown = ((peak - lastEquity) / peak) * 100;
 
     return {
@@ -157,23 +160,33 @@ const PnLChart: React.FC = () => {
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-6">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-gray-900">Performance Chart</h3>
+        <h3 className="text-lg font-semibold text-gray-900">
+          Performance Chart
+        </h3>
         {performanceMetrics && (
           <div className="flex space-x-4 text-sm">
             <div className="text-center">
               <div className="text-gray-500">Total Return</div>
-              <div className={`font-semibold ${
-                performanceMetrics.totalReturn >= 0 ? 'text-green-600' : 'text-red-600'
-              }`}>
-                {performanceMetrics.totalReturn >= 0 ? '+' : ''}
+              <div
+                className={`font-semibold ${
+                  performanceMetrics.totalReturn >= 0
+                    ? "text-green-600"
+                    : "text-red-600"
+                }`}
+              >
+                {performanceMetrics.totalReturn >= 0 ? "+" : ""}
                 {performanceMetrics.totalReturn.toFixed(2)}%
               </div>
             </div>
             <div className="text-center">
               <div className="text-gray-500">Current Drawdown</div>
-              <div className={`font-semibold ${
-                performanceMetrics.currentDrawdown <= 5 ? 'text-green-600' : 'text-red-600'
-              }`}>
+              <div
+                className={`font-semibold ${
+                  performanceMetrics.currentDrawdown <= 5
+                    ? "text-green-600"
+                    : "text-red-600"
+                }`}
+              >
                 -{performanceMetrics.currentDrawdown.toFixed(2)}%
               </div>
             </div>
@@ -189,13 +202,15 @@ const PnLChart: React.FC = () => {
         <div className="flex justify-between">
           <span className="text-gray-600">Starting Equity:</span>
           <span className="font-medium">
-            ${equityCurve[0]?.equity.toLocaleString() || '0'}
+            ${equityCurve[0]?.equity.toLocaleString() || "0"}
           </span>
         </div>
         <div className="flex justify-between">
           <span className="text-gray-600">Current Equity:</span>
           <span className="font-medium">
-            ${equityCurve[equityCurve.length - 1]?.equity.toLocaleString() || '0'}
+            $
+            {equityCurve[equityCurve.length - 1]?.equity.toLocaleString() ||
+              "0"}
           </span>
         </div>
       </div>

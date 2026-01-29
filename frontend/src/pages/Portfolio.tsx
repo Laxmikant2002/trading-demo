@@ -1,24 +1,27 @@
-import React from 'react';
-import { usePortfolioStore } from '../store/portfolio.store';
-import PortfolioCard from '../components/portfolio/PortfolioCard';
-import PositionRow from '../components/portfolio/PositionRow';
-import PnLChart from '../components/portfolio/PnLChart';
-import StatsGrid from '../components/portfolio/StatsGrid';
-import { DocumentArrowDownIcon } from '@heroicons/react/24/solid';
+import React from "react";
+import { usePortfolioStore } from "../store/portfolio.store";
+import PortfolioCard from "../components/portfolio/PortfolioCard";
+import PositionRow from "../components/portfolio/PositionRow";
+import PnLChart from "../components/portfolio/PnLChart";
+import StatsGrid from "../components/portfolio/StatsGrid";
+import { DocumentArrowDownIcon } from "@heroicons/react/24/solid";
 
 const Portfolio: React.FC = () => {
   const { positions, exportToCSV } = usePortfolioStore();
 
   const handleExportCSV = () => {
     const csvData = exportToCSV();
-    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
+    const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
 
     if (link.download !== undefined) {
       const url = URL.createObjectURL(blob);
-      link.setAttribute('href', url);
-      link.setAttribute('download', `portfolio_${new Date().toISOString().split('T')[0]}.csv`);
-      link.style.visibility = 'hidden';
+      link.setAttribute("href", url);
+      link.setAttribute(
+        "download",
+        `portfolio_${new Date().toISOString().split("T")[0]}.csv`,
+      );
+      link.style.visibility = "hidden";
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -27,7 +30,7 @@ const Portfolio: React.FC = () => {
 
   const handleClosePosition = (positionId: string) => {
     // TODO: Implement position closing logic
-    console.log('Close position:', positionId);
+    console.log("Close position:", positionId);
   };
 
   return (
@@ -117,7 +120,9 @@ const Portfolio: React.FC = () => {
                 <div className="px-6 py-12 text-center">
                   <div className="text-gray-500">
                     <p className="text-lg">No open positions</p>
-                    <p className="text-sm mt-1">Start trading to see your positions here</p>
+                    <p className="text-sm mt-1">
+                      Start trading to see your positions here
+                    </p>
                   </div>
                 </div>
               )}
@@ -133,26 +138,34 @@ const Portfolio: React.FC = () => {
         {/* Recent Activity */}
         <div className="mt-8">
           <div className="bg-white rounded-lg border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Recent Activity
+            </h3>
             <div className="space-y-3">
               <div className="flex items-center justify-between py-2 border-b border-gray-100">
                 <div className="flex items-center space-x-3">
                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span className="text-sm text-gray-900">BTC position opened</span>
+                  <span className="text-sm text-gray-900">
+                    BTC position opened
+                  </span>
                 </div>
                 <span className="text-xs text-gray-500">2 hours ago</span>
               </div>
               <div className="flex items-center justify-between py-2 border-b border-gray-100">
                 <div className="flex items-center space-x-3">
                   <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                  <span className="text-sm text-gray-900">ETH position updated</span>
+                  <span className="text-sm text-gray-900">
+                    ETH position updated
+                  </span>
                 </div>
                 <span className="text-xs text-gray-500">4 hours ago</span>
               </div>
               <div className="flex items-center justify-between py-2">
                 <div className="flex items-center space-x-3">
                   <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                  <span className="text-sm text-gray-900">SOL position closed</span>
+                  <span className="text-sm text-gray-900">
+                    SOL position closed
+                  </span>
                 </div>
                 <span className="text-xs text-gray-500">1 day ago</span>
               </div>

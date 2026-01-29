@@ -1,6 +1,9 @@
-import React from 'react';
-import { Position } from '../../store/portfolio.store';
-import { ArrowTrendingUpIcon, ArrowTrendingDownIcon } from '@heroicons/react/24/solid';
+import React from "react";
+import { Position } from "../../store/portfolio.store";
+import {
+  ArrowTrendingUpIcon,
+  ArrowTrendingDownIcon,
+} from "@heroicons/react/24/solid";
 
 interface PositionRowProps {
   position: Position;
@@ -9,24 +12,24 @@ interface PositionRowProps {
 
 const PositionRow: React.FC<PositionRowProps> = ({ position, onClose }) => {
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(value);
   };
 
   const formatPercent = (value: number) => {
-    return `${value >= 0 ? '+' : ''}${value.toFixed(2)}%`;
+    return `${value >= 0 ? "+" : ""}${value.toFixed(2)}%`;
   };
 
   const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+    return new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     }).format(date);
   };
 
@@ -38,9 +41,13 @@ const PositionRow: React.FC<PositionRowProps> = ({ position, onClose }) => {
           <div className="text-lg font-medium text-gray-900">
             {position.symbol}
           </div>
-          <div className={`ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-            position.side === 'long' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-          }`}>
+          <div
+            className={`ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+              position.side === "long"
+                ? "bg-green-100 text-green-800"
+                : "bg-red-100 text-red-800"
+            }`}
+          >
             {position.side.toUpperCase()}
           </div>
         </div>
@@ -72,9 +79,11 @@ const PositionRow: React.FC<PositionRowProps> = ({ position, onClose }) => {
       {/* Unrealized P&L */}
       <td className="px-6 py-4 whitespace-nowrap">
         <div className="flex items-center">
-          <span className={`text-sm font-medium ${
-            position.unrealizedPnL >= 0 ? 'text-green-600' : 'text-red-600'
-          }`}>
+          <span
+            className={`text-sm font-medium ${
+              position.unrealizedPnL >= 0 ? "text-green-600" : "text-red-600"
+            }`}
+          >
             {formatCurrency(position.unrealizedPnL)}
           </span>
           {position.unrealizedPnL >= 0 ? (
@@ -83,9 +92,13 @@ const PositionRow: React.FC<PositionRowProps> = ({ position, onClose }) => {
             <ArrowTrendingDownIcon className="h-4 w-4 text-red-600 ml-1" />
           )}
         </div>
-        <div className={`text-xs ${
-          position.unrealizedPnLPercent >= 0 ? 'text-green-600' : 'text-red-600'
-        }`}>
+        <div
+          className={`text-xs ${
+            position.unrealizedPnLPercent >= 0
+              ? "text-green-600"
+              : "text-red-600"
+          }`}
+        >
           {formatPercent(position.unrealizedPnLPercent)}
         </div>
       </td>
